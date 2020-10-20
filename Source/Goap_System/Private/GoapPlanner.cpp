@@ -38,15 +38,15 @@ TArray<TSubclassOf<UGAction>> AGoapPlanner::Plan(TArray<TSubclassOf<UGAction>> a
 
 	TArray<GNode> nodes;
 
-	GNode startNode = { nullptr, 0, stateManager->GetStates(), beliefs, nullptr };
+	GNode startNode(nullptr, 0.0f, stateManager->GetStates(), beliefs, nullptr);
 
 	bool bSuccess = BuildGraph(startNode, nodes, actions, goal);
 
-	//if (!bSuccess)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Planner was unable to make a plan!"));
-	//	return TArray<TSubclassOf<UGAction>>();
-	//}
+	if (!bSuccess)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Planner was unable to make a plan!"));
+		return TArray<TSubclassOf<UGAction>>();
+	}
 
 	GNode cheapest;
 
@@ -84,7 +84,7 @@ TArray<TSubclassOf<UGAction>> AGoapPlanner::Plan(TArray<TSubclassOf<UGAction>> a
 	return plan;
 }
 
-bool AGoapPlanner::BuildGraph(const GNode& parent, TArray<GNode> nodes, TArray<TSubclassOf<UGAction>> possibleActions, TMap<FString, int32> goal)
+bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<TSubclassOf<UGAction>> possibleActions, TMap<FString, int32> goal)
 {
 	bool bFoundPath = false;
 
@@ -92,11 +92,32 @@ bool AGoapPlanner::BuildGraph(const GNode& parent, TArray<GNode> nodes, TArray<T
 	{
 		if (Cast<UGAction>(action)->isAchievable())
 		{
-			TMap<FString, int32>  currentState;
+			TMap<FString, int32> currentState;
 
-			for (TPair<FString, int32> eff : Cast<UGAction>(action)->effects)
+			currentState = parent.state;
+
+			for (TPair<FString, int32> effect : Cast<UGAction>(action)->effects)
 			{
-				//if(!currentState.Contains())
+				if (!currentState.Contains(effect.Key))
+				{
+					currentState.Add(effect.Key, effect.Value);
+				}
+			}
+
+			UGAction* act = Cast<UGAction>(action);
+			GNode* parentPtr = &parent;
+
+			GNode node(parentPtr, parent.cost + act->cost, currentState, act);
+
+			if (GoalAchieved(goal, currentState))
+			{
+				nodes.Add(node);
+				bFoundPath = true;
+			}
+
+			else
+			{
+				//Todo: Implement some sort of subset of actions.
 			}
 
 		}

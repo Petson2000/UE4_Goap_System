@@ -4,7 +4,7 @@ GNode::GNode()
 {
 }
 
-GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> states)
+GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> states, UGAction* action)
 {
 	parent = inParent;
 	cost = inCost;
