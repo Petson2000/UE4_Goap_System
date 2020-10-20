@@ -25,3 +25,8 @@ void UGAction::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	// ...
 }
 
+bool UGAction::isAchievable()
+{
+	return true;
+}
+

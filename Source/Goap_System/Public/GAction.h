@@ -45,4 +45,6 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "GOAP")
 	bool running = false;
 
+	bool isAchievable();
+
 };

@@ -11,7 +11,7 @@ GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> states)
 	state = states;
 }
 
-GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> allStates, TMap<FString, int32> beliefStates)
+GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> allStates, TMap<FString, int32> beliefStates, UGAction* action)
 {
 	parent = inParent;
 	cost = inCost;

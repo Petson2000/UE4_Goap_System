@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "GAction.h"
 #include "CoreMinimal.h"
 
 /**
@@ -14,7 +15,7 @@ public:
 
 	GNode(GNode* inParent, float inCost, TMap<FString, int32> states);
 
-	GNode(GNode* inParent, float inCost, TMap<FString, int32> allStates, TMap<FString, int32> beliefStates);
+	GNode(GNode* inParent, float inCost, TMap<FString, int32> allStates, TMap<FString, int32> beliefStates, UGAction* action);
 
 	~GNode();
 
@@ -26,5 +27,6 @@ public:
 	TMap<FString, int32> state;
 
 	//Todo: we probably want this to hold a ref to an action somehow
+	TSubclassOf<UGAction> action;
 
 };
