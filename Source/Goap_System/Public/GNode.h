@@ -26,5 +26,5 @@ public:
 
 	TMap<FString, int32> state;
 
-	TSubclassOf<UGAction> action;
+	UGAction* action;
 };

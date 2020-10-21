@@ -7,7 +7,7 @@
 #include "GAction.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
 class GOAP_SYSTEM_API UGAction : public UActorComponent
 {
 	GENERATED_BODY()
@@ -20,6 +20,14 @@ protected:
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	bool PrePerform();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	bool PostPerform();
+
+	bool isAchievable();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GOAP")
@@ -36,15 +44,12 @@ public:
 
 	//Todo: Need to implement a version of worldstates here
 	//Todo: Also need worldstate after effect for each action
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<FString, int32> preConditions;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<FString, int32> effects;
 
 	//Todo: Need a way to check current beliefs
-
 	UPROPERTY(VisibleAnywhere, Category = "GOAP")
 	bool running = false;
-
-	bool isAchievable();
-
 };

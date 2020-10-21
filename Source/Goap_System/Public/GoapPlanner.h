@@ -23,16 +23,15 @@ public:
 
 public:
 
-	//Todo: Need worldstates here when implemented
-	TArray<TSubclassOf<UGAction>> Plan(TArray<TSubclassOf<UGAction>> actions, TMap<FString, int32> goal, TMap<FString, int32> beliefs);
+	TArray<UGAction*> Plan(TArray<UGAction*> actions, TMap<FString, int32> goal, TMap<FString, int32> beliefs);
 
 private:
-	//bool BuildGraph(GNode* parent, TArray<GNode*> nodes, TArray<UGAction&> availableActions, TMap<FString, int32> goal);
+	bool BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGAction*> possibleActions, TMap<FString, int32> goal);
 
-	bool BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<TSubclassOf<UGAction>> possibleActions, TMap<FString, int32> goal);
+	TArray<UGAction*> ActionSubset(TArray<UGAction*> actions, UGAction* actionToRemove);
 
 
-	bool GoalAchieved(TMap<FString, int32> goal, TMap<FString, int32> state) { return true; }
+	bool GoalAchieved(TMap<FString, int32> goal, TMap<FString, int32> state);
 
 public:
 	AWorldStateManager* stateManager;

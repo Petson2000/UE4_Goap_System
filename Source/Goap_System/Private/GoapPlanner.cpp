@@ -6,7 +6,7 @@
 // Sets default values
 AGoapPlanner::AGoapPlanner()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
@@ -15,7 +15,7 @@ AGoapPlanner::AGoapPlanner()
 void AGoapPlanner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -24,16 +24,13 @@ void AGoapPlanner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-TArray<TSubclassOf<UGAction>> AGoapPlanner::Plan(TArray<TSubclassOf<UGAction>> actions, TMap<FString, int32> goal, TMap<FString, int32> beliefs)
+TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, TMap<FString, int32> goal, TMap<FString, int32> beliefs)
 {
-	TArray<TSubclassOf<UGAction>> useableActions;
+	TArray<UGAction*> useableActions;
 
-	for (TSubclassOf<UGAction> action : actions)
+	for (const auto& action : actions)
 	{
-		if (Cast<UGAction>(action))
-		{
-				useableActions.Add(action);
-		}
+		useableActions.Add(action);
 	}
 
 	TArray<GNode> nodes;
@@ -45,12 +42,12 @@ TArray<TSubclassOf<UGAction>> AGoapPlanner::Plan(TArray<TSubclassOf<UGAction>> a
 	if (!bSuccess)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Planner was unable to make a plan!"));
-		return TArray<TSubclassOf<UGAction>>();
+		return {};
 	}
 
 	GNode cheapest;
 
-	for (GNode& node : nodes)
+	for (auto node : nodes)
 	{
 		if (node.cost < cheapest.cost)
 		{
@@ -58,8 +55,7 @@ TArray<TSubclassOf<UGAction>> AGoapPlanner::Plan(TArray<TSubclassOf<UGAction>> a
 		}
 	}
 
-	TArray<TSubclassOf<UGAction>> result;
-
+	TArray<UGAction*> result;
 	GNode* node = &cheapest;
 
 	while (node != nullptr)
@@ -72,9 +68,9 @@ TArray<TSubclassOf<UGAction>> AGoapPlanner::Plan(TArray<TSubclassOf<UGAction>> a
 		node = node->parent;
 	}
 
-	TArray<TSubclassOf<UGAction>> plan;
+	TArray<UGAction*> plan;
 
-	for (TSubclassOf<UGAction> action : result)
+	for (const auto& action : result)
 	{
 		plan.Add(action);
 	}
@@ -84,19 +80,19 @@ TArray<TSubclassOf<UGAction>> AGoapPlanner::Plan(TArray<TSubclassOf<UGAction>> a
 	return plan;
 }
 
-bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<TSubclassOf<UGAction>> possibleActions, TMap<FString, int32> goal)
+bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGAction*> possibleActions,TMap<FString, int32> goal)
 {
 	bool bFoundPath = false;
 
-	for (TSubclassOf<UGAction> action : possibleActions)
+	for (const auto& action : possibleActions)
 	{
-		if (Cast<UGAction>(action)->isAchievable())
+		if (action->isAchievable())
 		{
 			TMap<FString, int32> currentState;
 
 			currentState = parent.state;
 
-			for (TPair<FString, int32> effect : Cast<UGAction>(action)->effects)
+			for (TPair<FString, int32> effect : action->effects)
 			{
 				if (!currentState.Contains(effect.Key))
 				{
@@ -104,7 +100,7 @@ bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<TSubcla
 				}
 			}
 
-			UGAction* act = Cast<UGAction>(action);
+			UGAction* act = action;
 			GNode* parentPtr = &parent;
 
 			GNode node(parentPtr, parent.cost + act->cost, currentState, act);
@@ -117,9 +113,42 @@ bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<TSubcla
 
 			else
 			{
-				//Todo: Implement some sort of subset of actions.
-			}
+				TArray<UGAction*> subset = ActionSubset(possibleActions, action);
+				bool bFound = BuildGraph(node, nodes, subset, goal);
 
+				if (bFound)
+				{
+					bFoundPath = true;
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+TArray<UGAction*> AGoapPlanner::ActionSubset(TArray<UGAction*> actions, UGAction* actionToRemove)
+{
+	TArray<UGAction*> subset;
+
+	for (const auto action : actions)
+	{
+		if (action != actionToRemove)
+		{
+			subset.Add(action);
+		}
+	}
+
+	return subset;
+}
+
+bool AGoapPlanner::GoalAchieved(TMap<FString, int32> goal, TMap<FString, int32> state)
+{
+	for (TPair<FString, int32> g : goal)
+	{
+		if (!state.Contains(g.Key))
+		{
+			return false;
 		}
 	}
 
