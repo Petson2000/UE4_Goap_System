@@ -5,6 +5,7 @@
 #include "GAction.h"
 #include "WorldStateManager.h"
 #include "GNode.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GoapPlanner.generated.h"
 
 UCLASS()
@@ -23,7 +24,7 @@ public:
 
 public:
 
-	TArray<UGAction*> Plan(TArray<UGAction*> actions, TMap<FString, int32> goal, TMap<FString, int32> beliefs);
+	TArray<UGAction*> Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs);
 
 private:
 	bool BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGAction*> possibleActions, TMap<FString, int32> goal);

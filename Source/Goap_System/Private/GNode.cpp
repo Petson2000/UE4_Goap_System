@@ -4,25 +4,36 @@ GNode::GNode()
 {
 }
 
-GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> states, UGAction* action)
+GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> inStates, UGAction* action)
 {
 	parent = inParent;
 	cost = inCost;
-	state = states;
+	states = states;
 }
 
-GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> allStates, TMap<FString, int32> beliefStates, UGAction* action)
+GNode::GNode(GNode* inParent, float inCost, const TMap<FString, int32>& allStates, const TMap<FString, int32>& beliefStates, UGAction* inAction)
 {
-	parent = inParent;
-	cost = inCost;
-	state = allStates;
-
-	for (TPair<FString, int32> pair : beliefStates)
+	if (inParent != nullptr)
 	{
-		if (!state.Contains(pair.Key))
-		{
-			state.Add(pair);
-		}
+		parent = inParent;
+	}
+
+	cost = inCost;
+
+
+	states = allStates;
+
+	//for (TPair<FString, int32> pair : beliefStates)
+	//{
+	//	if (!states.Contains(pair.Key))
+	//	{
+	//		states.Add(pair);
+	//	}
+	//}
+
+	if (inAction != nullptr)
+	{
+		action = inAction;
 	}
 }
 

@@ -23,19 +23,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	bool HasState(FString key, int32 value);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void AddState(FString key, int32 value);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void RemoveState(FString key);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void SetState(FString key, int32 value);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void ModifyState(FString key, int32 value);
 
 	TMap<FString, int32> GetStates();

@@ -15,7 +15,7 @@ public:
 
 	GNode(GNode* inParent, float inCost, TMap<FString, int32> states, UGAction* action);
 
-	GNode(GNode* inParent, float inCost, TMap<FString, int32> allStates, TMap<FString, int32> beliefStates, UGAction* action);
+	GNode(GNode* inParent, float inCost, const TMap<FString, int32>& allStates, const TMap<FString, int32>& beliefStates, UGAction* inAction);
 
 	~GNode();
 
@@ -24,7 +24,7 @@ public:
 	 GNode* parent;
 	 float cost;
 
-	TMap<FString, int32> state;
+	TMap<FString, int32> states;
 
 	UGAction* action;
 };

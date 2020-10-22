@@ -8,7 +8,6 @@ AGoapPlanner::AGoapPlanner()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +15,7 @@ void AGoapPlanner::BeginPlay()
 {
 	Super::BeginPlay();
 
+	stateManager = Cast<AWorldStateManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AWorldStateManager::StaticClass()));
 }
 
 // Called every frame
@@ -24,7 +24,7 @@ void AGoapPlanner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, TMap<FString, int32> goal, TMap<FString, int32> beliefs)
+TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs)
 {
 	TArray<UGAction*> useableActions;
 
@@ -90,7 +90,7 @@ bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGActio
 		{
 			TMap<FString, int32> currentState;
 
-			currentState = parent.state;
+			currentState = parent.states;
 
 			for (TPair<FString, int32> effect : action->effects)
 			{
@@ -101,6 +101,7 @@ bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGActio
 			}
 
 			UGAction* act = action;
+
 			GNode* parentPtr = &parent;
 
 			GNode node(parentPtr, parent.cost + act->cost, currentState, act);
@@ -124,7 +125,7 @@ bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGActio
 		}
 	}
 
-	return true;
+	return bFoundPath;
 }
 
 TArray<UGAction*> AGoapPlanner::ActionSubset(TArray<UGAction*> actions, UGAction* actionToRemove)

@@ -16,12 +16,19 @@ void AGActor::Init(TArray<UGAction*> characterActions)
 
 	stateManager = Cast<AWorldStateManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AWorldStateManager::StaticClass()));
 
+	planner = Cast<AGoapPlanner>(UGameplayStatics::GetActorOfClass(GetWorld(), AGoapPlanner::StaticClass()));
+
 	if (stateManager == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("WorldStateManager could not be set!"));
 	}
 
-	actionQueue.Append(characterActions);
+	if (planner == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Planner could not be set!"));
+	}
+
+	actions.Append(characterActions);
 }
 
 void AGActor::CompleteAction()
@@ -45,13 +52,16 @@ void AGActor::Update()
 	{
 		for (auto goal : goals)
 		{
-			actionQueue = planner->Plan(actions, goal.Key->sGoals, beliefs);
-
-			//Plan exists
-			if (actionQueue.Num() > 0)
+			if (goal.Key != NULL)
 			{
-				currentGoal = goal.Key;
-				break;
+				actionQueue = planner->Plan(actions, goal.Key->sGoals, beliefs);
+
+				//Plan exists
+				if (actionQueue.Num() > 0)
+				{
+					currentGoal = goal.Key;
+					break;
+				}
 			}
 		}
 	}
@@ -75,14 +85,17 @@ void AGActor::Update()
 		currentAction = actionQueue[0];
 		if (currentAction->PrePerform())
 		{
+			actionQueue.Remove(currentAction);
 			currentAction->running = true;
+		}
+
+		else
+		{
+			actionQueue.Empty();
 		}
 	}
 
-	else
-	{
-		actionQueue.Empty();
-	}
+	
 }
 
 

@@ -35,14 +35,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UGAction*> actions;
 
-	//UPROPERTY(EditAnywhere, Category = "GOAP")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<UG_SubGoal*, int32> goals;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
 	UGAction* currentAction;
 
 
-	AWorldStateManager* stateManager;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
+		AWorldStateManager* stateManager;
 
 	TMap<FString, int32> beliefs;
 
