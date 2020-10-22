@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "GAction.h"
-#include "GSubGoal.h"
+#include "G_SubGoal.h"
 #include "WorldStateManager.h"
 #include "GoapPlanner.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
@@ -36,7 +36,7 @@ public:
 	TArray<UGAction*> actions;
 
 	//UPROPERTY(EditAnywhere, Category = "GOAP")
-	TMap<GSubGoal*, int32> goals;
+	TMap<UG_SubGoal*, int32> goals;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
 	UGAction* currentAction;
@@ -50,7 +50,7 @@ public:
 
 	TArray<UGAction*> actionQueue;
 
-	GSubGoal* currentGoal;
+	UG_SubGoal* currentGoal;
 
 private:
 
