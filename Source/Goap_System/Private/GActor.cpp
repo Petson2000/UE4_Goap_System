@@ -76,12 +76,6 @@ void AGActor::Update()
 		if (currentAction->PrePerform())
 		{
 			currentAction->running = true;
-			GetPawn()->AddMovementInput(currentAction->target, 1.0f, false);
-
-			//if (GetPawn()->GetActorLocation() == currentAction->target)
-			//{
-			//
-			//}
 		}
 	}
 
