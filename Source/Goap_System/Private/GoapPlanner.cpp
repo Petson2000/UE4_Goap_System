@@ -1,16 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GoapPlanner.h"
 
-// Sets default values
 AGoapPlanner::AGoapPlanner()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
 void AGoapPlanner::BeginPlay()
 {
 	Super::BeginPlay();
@@ -18,7 +12,6 @@ void AGoapPlanner::BeginPlay()
 	stateManager = Cast<AWorldStateManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AWorldStateManager::StaticClass()));
 }
 
-// Called every frame
 void AGoapPlanner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -105,9 +98,6 @@ bool AGoapPlanner::BuildGraph(GNode* parent, TArray<GNode*>& nodeList, TArray<UG
 				}
 			}
 
-			//auto act = action;
-
-			//GNode* parentPtr = parent;
 			GNode* node = new GNode(parent, parent->cost + action->cost, currentState, action);
 
 			if (GoalAchieved(goal, currentState))

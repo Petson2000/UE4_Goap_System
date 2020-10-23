@@ -44,8 +44,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	float duration = 0;
 
-	//Todo: Need to implement a version of worldstates here
-	//Todo: Also need worldstate after effect for each action
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<FString, int32> preConditions;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
