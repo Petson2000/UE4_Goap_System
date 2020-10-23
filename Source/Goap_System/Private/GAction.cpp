@@ -6,7 +6,7 @@
 // Sets default values for this component's properties
 UGAction::UGAction()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 
@@ -27,6 +27,18 @@ void UGAction::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 bool UGAction::isAchievable()
 {
+	return true;
+}
+
+bool UGAction::isAchievableGiven(const TMap<FString, int32>& conditions)
+{
+	for (const auto& pair : preConditions)
+	{
+		if (!conditions.Contains(pair.Key))
+		{
+			return false;
+		}
+	}
 	return true;
 }
 

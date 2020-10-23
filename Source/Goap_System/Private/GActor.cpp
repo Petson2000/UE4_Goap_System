@@ -54,7 +54,7 @@ void AGActor::Update()
 		{
 			if (goal.Key != NULL)
 			{
-				actionQueue = planner->Plan(actions, goal.Key->sGoals, beliefs);
+				actionQueue = planner->Plan(actions, goal.Key->sGoals, beliefs, standardAction);
 
 				//Plan exists
 				if (actionQueue.Num() > 0)
@@ -83,15 +83,18 @@ void AGActor::Update()
 	else if (actionQueue.Num() > 0)
 	{
 		currentAction = actionQueue[0];
-		if (currentAction->PrePerform())
+		if (currentAction != nullptr)
 		{
-			actionQueue.Remove(currentAction);
-			currentAction->running = true;
-		}
+			if (currentAction->PrePerform())
+			{
+				actionQueue.Remove(currentAction);
+				currentAction->running = true;
+			}
 
-		else
-		{
-			actionQueue.Empty();
+			else
+			{
+				actionQueue.Empty();
+			}
 		}
 	}
 

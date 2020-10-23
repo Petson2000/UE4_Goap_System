@@ -29,6 +29,8 @@ public:
 
 	bool isAchievable();
 
+	bool isAchievableGiven(const TMap<FString, int32>& conditions);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GOAP")
 	FString actionName = "Action";

@@ -41,6 +41,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
 	UGAction* currentAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
+	UGAction* standardAction;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
 		AWorldStateManager* stateManager;

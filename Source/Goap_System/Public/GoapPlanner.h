@@ -24,12 +24,14 @@ public:
 
 public:
 
-	TArray<UGAction*> Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs);
+	TArray<UGAction*> Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs, UGAction* startingAction);
 
 private:
-	bool BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGAction*> possibleActions, TMap<FString, int32> goal);
+	bool BuildGraph(GNode* parent, TArray<GNode*>& nodeList, TArray<UGAction*> possibleActions, TMap<FString, int32> goal);
 
-	TArray<UGAction*> ActionSubset(TArray<UGAction*> actions, UGAction* actionToRemove);
+	TArray<UGAction*> ActionSubset(TArray<UGAction*>& actions, UGAction* actionToRemove);
+
+	TArray<GNode*> nodes;
 
 
 	bool GoalAchieved(TMap<FString, int32> goal, TMap<FString, int32> state);

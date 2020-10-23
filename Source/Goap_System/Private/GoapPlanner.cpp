@@ -24,75 +24,80 @@ void AGoapPlanner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs)
+TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs, UGAction* startingAction)
 {
+	nodes.Empty();
+
 	TArray<UGAction*> useableActions;
 
 	for (const auto& action : actions)
 	{
-		useableActions.Add(action);
+		if (action->isAchievable())
+		{
+			useableActions.Add(action);
+		}
 	}
 
-	TArray<GNode> nodes;
 
-	GNode startNode(nullptr, 0.0f, stateManager->GetStates(), beliefs, nullptr);
-
+	GNode* startNode = new GNode(nullptr, 0.0f, stateManager->GetStates(), beliefs, nullptr);
 	bool bSuccess = BuildGraph(startNode, nodes, actions, goal);
 
 	if (!bSuccess)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Planner was unable to make a plan!"));
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Planning failed, no plan found:"));
 		return {};
 	}
 
-	GNode cheapest;
+	GNode* cheapest = new GNode();
 
-	for (auto node : nodes)
+	cheapest->cost = HUGE_VALF;
+
+	if (nodes.Num() > 0)
 	{
-		if (node.cost < cheapest.cost)
+		for (auto node : nodes)
 		{
-			cheapest = node;
+			if (node->cost < cheapest->cost)
+			{
+				cheapest = node;
+			}
 		}
 	}
 
 	TArray<UGAction*> result;
-	GNode* node = &cheapest;
+	GNode* node = cheapest;
 
 	while (node != nullptr)
 	{
 		if (node->action != nullptr)
 		{
-			result.Add(node->action);
+			result.Insert(node->action, 0);
 		}
 
 		node = node->parent;
 	}
 
-	TArray<UGAction*> plan;
+	TArray<UGAction*> plan{};
 
 	for (const auto& action : result)
 	{
 		plan.Add(action);
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Planning was successful! Current plan includes %d tasks!"), plan.Num());
-
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Planning complete, nodes: " + FString::FromInt(plan.Num())));
 	return plan;
 }
 
-bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGAction*> possibleActions,TMap<FString, int32> goal)
+bool AGoapPlanner::BuildGraph(GNode* parent, TArray<GNode*>& nodeList, TArray<UGAction*> possibleActions, TMap<FString, int32> goal)
 {
 	bool bFoundPath = false;
 
-	for (const auto& action : possibleActions)
+	for (const auto action : possibleActions)
 	{
-		if (action->isAchievable())
+		if (action->isAchievableGiven(parent->states))
 		{
-			TMap<FString, int32> currentState;
+			TMap<FString, int32> currentState(parent->states);
 
-			currentState = parent.states;
-
-			for (TPair<FString, int32> effect : action->effects)
+			for (const auto& effect : action->effects)
 			{
 				if (!currentState.Contains(effect.Key))
 				{
@@ -100,22 +105,21 @@ bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGActio
 				}
 			}
 
-			UGAction* act = action;
+			//auto act = action;
 
-			GNode* parentPtr = &parent;
-
-			GNode node(parentPtr, parent.cost + act->cost, currentState, act);
+			//GNode* parentPtr = parent;
+			GNode* node = new GNode(parent, parent->cost + action->cost, currentState, action);
 
 			if (GoalAchieved(goal, currentState))
 			{
-				nodes.Add(node);
+				nodeList.Add(node);
 				bFoundPath = true;
 			}
 
 			else
 			{
 				TArray<UGAction*> subset = ActionSubset(possibleActions, action);
-				bool bFound = BuildGraph(node, nodes, subset, goal);
+				bool bFound = BuildGraph(node, nodeList, subset, goal);
 
 				if (bFound)
 				{
@@ -128,11 +132,11 @@ bool AGoapPlanner::BuildGraph(GNode& parent, TArray<GNode> nodes, TArray<UGActio
 	return bFoundPath;
 }
 
-TArray<UGAction*> AGoapPlanner::ActionSubset(TArray<UGAction*> actions, UGAction* actionToRemove)
+TArray<UGAction*> AGoapPlanner::ActionSubset(TArray<UGAction*>& actions, UGAction* actionToRemove)
 {
 	TArray<UGAction*> subset;
 
-	for (const auto action : actions)
+	for (const auto& action : actions)
 	{
 		if (action != actionToRemove)
 		{
@@ -145,7 +149,7 @@ TArray<UGAction*> AGoapPlanner::ActionSubset(TArray<UGAction*> actions, UGAction
 
 bool AGoapPlanner::GoalAchieved(TMap<FString, int32> goal, TMap<FString, int32> state)
 {
-	for (TPair<FString, int32> g : goal)
+	for (const auto& g : goal)
 	{
 		if (!state.Contains(g.Key))
 		{

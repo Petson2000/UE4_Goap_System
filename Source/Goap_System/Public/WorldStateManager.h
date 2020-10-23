@@ -23,24 +23,26 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "GOAP")
 	bool HasState(FString key, int32 value);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "GOAP")
 	void AddState(FString key, int32 value);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "GOAP")
 	void RemoveState(FString key);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "GOAP")
 	void SetState(FString key, int32 value);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "GOAP")
 	void ModifyState(FString key, int32 value);
 
+	UFUNCTION(BlueprintCallable, Category = "GOAP")
 	TMap<FString, int32> GetStates();
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<FString, int32> states;
 
 };
