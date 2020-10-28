@@ -17,8 +17,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
 public:	
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -32,6 +32,7 @@ public:
 	bool isAchievableGiven(const TMap<FString, int32>& conditions);
 
 public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GOAP")
 	FString actionName = "Action";
 
@@ -56,4 +57,6 @@ public:
 	//Todo: Need a way to check current beliefs
 	UPROPERTY(VisibleAnywhere, Category = "GOAP")
 	bool running = false;
+
+
 };
