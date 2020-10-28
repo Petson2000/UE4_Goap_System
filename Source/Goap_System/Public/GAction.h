@@ -49,6 +49,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<FString, int32> effects;
 
+	//What range the character has to be in to complete the action.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
+	float range = 5.0f;
+
 	//Todo: Need a way to check current beliefs
 	UPROPERTY(VisibleAnywhere, Category = "GOAP")
 	bool running = false;

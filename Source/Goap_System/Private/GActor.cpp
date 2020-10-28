@@ -44,8 +44,11 @@ void AGActor::Update()
 
 	if (currentAction != nullptr && currentAction->running)
 	{
-		CompleteAction();
-		bInvoked = true; 
+		if (FVector::Distance(GetPawn()->GetActorLocation(), currentAction->target) < currentAction->range)
+		{
+			CompleteAction();
+			bInvoked = true;
+		}
 	}
 
 	if (actionQueue.Num() <= 0)
