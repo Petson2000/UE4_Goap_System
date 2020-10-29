@@ -8,6 +8,7 @@
 #include "G_SubGoal.h"
 #include "WorldStateManager.h"
 #include "GoapPlanner.h"
+#include "NavMesh/RecastNavMesh.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GActor.generated.h"
 
@@ -21,28 +22,31 @@ class GOAP_SYSTEM_API AGActor : public AAIController
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	void Init(TArray<UGAction*> characterActions);
+		void Init(TArray<UGAction*> characterActions);
 
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	void CompleteAction();
+		void CompleteAction();
 
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	void Update();
+		void Update();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		FVector GetWalkablePoint(FVector origin);
 
 
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UGAction*> actions;
+		TArray<UGAction*> actions;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	TMap<UG_SubGoal*, int32> goals;
+		TMap<UG_SubGoal*, int32> goals;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
-	UGAction* currentAction;
+		UGAction* currentAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	UGAction* standardAction;
+		UGAction* standardAction;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
@@ -58,5 +62,6 @@ public:
 
 private:
 
+	FVector currentWaypoint;
 	bool bInvoked = false;
 };

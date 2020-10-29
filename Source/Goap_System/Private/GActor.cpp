@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GActor.h"
 
 void AGActor::Init(TArray<UGAction*> characterActions)
@@ -29,6 +26,7 @@ void AGActor::Init(TArray<UGAction*> characterActions)
 	}
 
 	actions.Append(characterActions);
+	bInvoked = false;
 }
 
 void AGActor::CompleteAction()
@@ -44,11 +42,17 @@ void AGActor::Update()
 
 	if (currentAction != nullptr && currentAction->running)
 	{
-		if (FVector::Distance(GetPawn()->GetActorLocation(), currentAction->target) < currentAction->range)
+		if (FVector::Distance(GetPawn()->GetActorLocation(), currentWaypoint) < currentAction->range)
 		{
-			CompleteAction();
-			bInvoked = true;
+			if (!bInvoked)
+			{
+				StopMovement();
+				CompleteAction();
+				bInvoked = true;
+			}
 		}
+
+		return;
 	}
 
 	if (actionQueue.Num() <= 0)
@@ -79,19 +83,21 @@ void AGActor::Update()
 				goals.Remove(currentGoal);
 			}
 			planner = nullptr;
-
 		}
 	}
 
 	else if (actionQueue.Num() > 0)
 	{
 		currentAction = actionQueue[0];
+		currentWaypoint = GetWalkablePoint(currentAction->target);
 		if (currentAction != nullptr)
 		{
 			if (currentAction->PrePerform())
 			{
 				actionQueue.Remove(currentAction);
 				currentAction->running = true;
+				currentWaypoint = GetWalkablePoint(currentAction->target);
+				MoveToLocation(currentWaypoint, currentAction->range, true, true, true, true, 0, true);
 			}
 
 			else
