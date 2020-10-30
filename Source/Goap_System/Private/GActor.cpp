@@ -42,14 +42,10 @@ void AGActor::Update()
 
 	if (currentAction != nullptr && currentAction->running)
 	{
-		if (FVector::Distance(GetPawn()->GetActorLocation(), currentWaypoint) < currentAction->range)
+		if (FVector::Distance(GetPawn()->GetActorLocation(), currentAction->target) < currentAction->range)
 		{
-			if (!bInvoked)
-			{
 				StopMovement();
 				CompleteAction();
-				bInvoked = true;
-			}
 		}
 
 		return;
@@ -89,15 +85,14 @@ void AGActor::Update()
 	else if (actionQueue.Num() > 0)
 	{
 		currentAction = actionQueue[0];
-		currentWaypoint = GetWalkablePoint(currentAction->target);
 		if (currentAction != nullptr)
 		{
 			if (currentAction->PrePerform())
 			{
 				actionQueue.Remove(currentAction);
 				currentAction->running = true;
-				currentWaypoint = GetWalkablePoint(currentAction->target);
-				MoveToLocation(currentWaypoint, currentAction->range, true, true, true, true, 0, true);
+				GetPawn()->SetActorRotation(currentAction->target.Rotation());
+				MoveToLocation(currentAction->target, false, true);
 			}
 
 			else

@@ -30,10 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
 		void Update();
 
-	UFUNCTION(BlueprintImplementableEvent)
-		FVector GetWalkablePoint(FVector origin);
-
-
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -61,7 +57,5 @@ public:
 	UG_SubGoal* currentGoal;
 
 private:
-
-	FVector currentWaypoint;
 	bool bInvoked = false;
 };
