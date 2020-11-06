@@ -78,7 +78,7 @@ void AGActor::Update()
 			{
 				goals.Remove(currentGoal);
 			}
-			planner = nullptr;
+			//planner = nullptr;
 		}
 	}
 
