@@ -8,6 +8,7 @@
 #include "G_SubGoal.h"
 #include "WorldStateManager.h"
 #include "GoapPlanner.h"
+#include "GInventory.h"
 #include "NavMesh/RecastNavMesh.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GActor.generated.h"
@@ -32,21 +33,20 @@ public:
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<UGAction*> actions;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
+	TArray<UGAction*> actions;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-		TMap<UG_SubGoal*, int32> goals;
+	TMap<UG_SubGoal*, int32> goals;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
-		UGAction* currentAction;
+	UGAction* currentAction;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
+	AWorldStateManager* stateManager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-		UGAction* standardAction;
-
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GOAP")
-		AWorldStateManager* stateManager;
+	AGInventory* Inventory;
 
 	TMap<FString, int32> beliefs;
 
@@ -54,6 +54,7 @@ public:
 
 	TArray<UGAction*> actionQueue;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GOAP")
 	UG_SubGoal* currentGoal;
 
 private:

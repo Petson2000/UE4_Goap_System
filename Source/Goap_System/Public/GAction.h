@@ -37,7 +37,7 @@ public:
 	FString actionName = "Action";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	float cost;
+	float cost = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	FVector target;
@@ -47,6 +47,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<FString, int32> preConditions;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
 	TMap<FString, int32> effects;
 
@@ -57,6 +58,4 @@ public:
 	//Todo: Need a way to check current beliefs
 	UPROPERTY(VisibleAnywhere, Category = "GOAP")
 	bool running = false;
-
-
 };

@@ -24,7 +24,7 @@ public:
 
 public:
 
-	TArray<UGAction*> Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs, UGAction* startingAction);
+	TArray<UGAction*> Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, const TMap<FString, int32>& beliefs);
 
 private:
 	bool BuildGraph(GNode* parent, TArray<GNode*>& nodeList, TArray<UGAction*> possibleActions, TMap<FString, int32> goal);

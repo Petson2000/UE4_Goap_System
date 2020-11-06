@@ -20,19 +20,13 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	template<class T>
-	static FORCEINLINE T GetItem(T)
-	{
-		items.FindItemByClass(T);
-		if (T != nullptr)
-		{
-			return T();
-		}
-	
-		return {};
-	}
+	UFUNCTION(BlueprintCallable)
+	void InsertItemInInventory(AActor* Item);
+
+	UFUNCTION(BlueprintCallable)
+	AActor* GetItemOfClass(UClass* ItemClass);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	TArray<AActor*> items;
+	TMap<AActor*, bool> items;
 };

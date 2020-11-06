@@ -15,7 +15,7 @@ GNode::GNode(GNode* inParent, float inCost, const TMap<FString, int32>& allState
 
 	cost = inCost;
 
-	states = allStates;
+	states = TMap<FString, int32>(allStates);
 
 	for (TPair<FString, int32> pair : beliefStates)
 	{

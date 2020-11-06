@@ -17,12 +17,13 @@ void AGoapPlanner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, TMap<FString, int32> beliefs, UGAction* startingAction)
+TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, const TMap<FString, int32>& beliefs)
 {
+	//Empty nodes before making a new plan to make sure we dont use past information.
 	nodes.Empty();
 
 	TArray<UGAction*> useableActions;
-
+	
 	for (const auto& action : actions)
 	{
 		if (action->isAchievable())
@@ -30,7 +31,6 @@ TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, const TMap<FStri
 			useableActions.Add(action);
 		}
 	}
-
 
 	GNode* startNode = new GNode(nullptr, 0.0f, stateManager->GetStates(), beliefs, nullptr);
 	bool bSuccess = BuildGraph(startNode, nodes, actions, goal);
@@ -77,6 +77,7 @@ TArray<UGAction*> AGoapPlanner::Plan(TArray<UGAction*> actions, const TMap<FStri
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Planning complete, nodes: " + FString::FromInt(plan.Num())));
+
 	return plan;
 }
 
@@ -139,9 +140,9 @@ TArray<UGAction*> AGoapPlanner::ActionSubset(TArray<UGAction*>& actions, UGActio
 
 bool AGoapPlanner::GoalAchieved(TMap<FString, int32> goal, TMap<FString, int32> state)
 {
-	for (const auto& g : goal)
+	for (const auto& subGoal : goal)
 	{
-		if (!state.Contains(g.Key))
+		if (!state.Contains(subGoal.Key))
 		{
 			return false;
 		}

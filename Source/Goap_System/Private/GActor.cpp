@@ -57,7 +57,7 @@ void AGActor::Update()
 		{
 			if (goal.Key != NULL)
 			{
-				actionQueue = planner->Plan(actions, goal.Key->sGoals, beliefs, standardAction);
+				actionQueue = planner->Plan(actions, goal.Key->sGoals, beliefs);
 
 				//Plan exists
 				if (actionQueue.Num() > 0)
@@ -91,6 +91,7 @@ void AGActor::Update()
 			{
 				actionQueue.Remove(currentAction);
 				currentAction->running = true;
+				GetPawn()->bUseControllerRotationRoll = false;
 				GetPawn()->SetActorRotation(currentAction->target.Rotation());
 				MoveToLocation(currentAction->target, false, true);
 			}
