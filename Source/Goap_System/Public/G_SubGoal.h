@@ -7,29 +7,28 @@
 #include "G_SubGoal.generated.h"
 
 
-UCLASS(ClassGroup = (Custom), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
-class GOAP_SYSTEM_API UG_SubGoal : public UActorComponent
+USTRUCT(BlueprintType, Blueprintable)
+struct FGSubGoal
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UG_SubGoal();
-	UG_SubGoal(FString s, int i, bool r);
+	FGSubGoal();
 
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	TMap<FString, int32> sGoals;
+	TMap<FName, int32> SubGoals;
 
-	bool bRemove;
-		
+	bool operator==(const FGSubGoal& Goal) const
+	{
+		TArray<FName> Keys;
+		TArray<FName> GoalKeys;
+		SubGoals.GenerateKeyArray(Keys);
+		Goal.SubGoals.GenerateKeyArray(GoalKeys);
+
+		return Keys == GoalKeys;
+	}
 };
+
+FORCEINLINE uint32 GetTypeHash(const FGSubGoal& b)
+{
+	return FCrc::MemCrc_DEPRECATED(&b, sizeof(FGSubGoal));
+}

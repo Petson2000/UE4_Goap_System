@@ -8,54 +8,60 @@
 
 
 UCLASS(ClassGroup = (Custom), BlueprintType, Blueprintable, meta = (BlueprintSpawnableComponent))
-class GOAP_SYSTEM_API UGAction : public UActorComponent
+class GOAP_SYSTEM_API UGAction : public UObject
 {
 	GENERATED_BODY()
 
 public:	
 	UGAction();
 
-protected:
-	virtual void BeginPlay() override;
 public:	
 
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION(BlueprintNativeEvent)
+	bool PrePerform(AActor* PerformingActor);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	bool PrePerform();
+	UFUNCTION(BlueprintNativeEvent)
+	void PerformUpdate(AActor* PerformingActor);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	bool PostPerform();
+	UFUNCTION(BlueprintNativeEvent)
+	bool PostPerform(AActor* PerformingActor);
 
-	bool isAchievable();
+	virtual bool PrePerform_Implementation(AActor* PerformingActor);
+	virtual void PerformUpdate_Implementation(AActor* PerformingActor);
+	virtual bool PostPerform_Implementation(AActor* PerformingActor);
 
-	bool isAchievableGiven(const TMap<FString, int32>& conditions);
+	bool IsAchievable();
+
+	bool IsAchievableGiven(const TMap<FName, int32>& conditions);
+
+	UFUNCTION(BlueprintCallable)
+	void FinishAction(AActor* PerformingActor);
 
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GOAP")
-	FString actionName = "Action";
+	FName ActionName = "Action";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	float cost = 1.0f;
+	float Cost = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	FVector target;
+	FVector Target;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	float duration = 0;
+	float Duration = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	TMap<FString, int32> preConditions;
+	TMap<FName, int32> PreCondition;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	TMap<FString, int32> effects;
+	TMap<FName, int32> Effects;
 
 	//What range the character has to be in to complete the action.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	float range = 5.0f;
+	float Range = 5.0f;
 
 	//Todo: Need a way to check current beliefs
 	UPROPERTY(VisibleAnywhere, Category = "GOAP")
-	bool running = false;
+	bool bIsRunning = false;
 };

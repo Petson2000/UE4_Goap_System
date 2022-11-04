@@ -1,34 +1,21 @@
 #include "GInventory.h"
 
-AGInventory::AGInventory()
+UGInventory::UGInventory()
 {
-	PrimaryActorTick.bCanEverTick = false;
 
 }
 
-void AGInventory::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void AGInventory::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void AGInventory::InsertItemInInventory(AActor* Item)
+void UGInventory::InsertItemInInventory(AActor* Item)
 {
 	if (Item != nullptr)
 	{
-		items.Add(Item, false);
+		Items.Add(Item, false);
 	}
 }
 
-AActor* AGInventory::GetItemOfClass(UClass* ItemClass)
+AActor* UGInventory::GetItemOfClass(UClass* ItemClass)
 {
-	for (auto pair : items)
+	for (auto pair : Items)
 	{
 		if (pair.Key->IsA(ItemClass) && !pair.Value)
 		{

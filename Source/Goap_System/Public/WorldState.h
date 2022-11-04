@@ -11,11 +11,11 @@ class GOAP_SYSTEM_API WorldState
 {
 public:
 	WorldState();
-	WorldState(FString inKey, int32 inValue);
+	WorldState(FString InKey, int32 InValue);
 	~WorldState();
 
 public:
 
-	FString key;
-	int32 value;
+	FString Key;
+	int32 Value;
 };

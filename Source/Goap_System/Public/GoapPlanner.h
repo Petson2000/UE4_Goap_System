@@ -9,34 +9,31 @@
 #include "GoapPlanner.generated.h"
 
 UCLASS()
-class GOAP_SYSTEM_API AGoapPlanner : public AActor
+class GOAP_SYSTEM_API UGoapPlanner : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 	
 public:	
-	AGoapPlanner();
+	UGoapPlanner();
 
 protected:
-	virtual void BeginPlay() override;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 public:
 
-	TArray<UGAction*> Plan(TArray<UGAction*> actions, const TMap<FString, int32>& goal, const TMap<FString, int32>& beliefs);
+	TArray<UGAction*> Plan(TArray<UGAction*> Actions, const TMap<FName, int32>& Goal, const TMap<FName, int32>& Beliefs);
 
 private:
-	bool BuildGraph(GNode* parent, TArray<GNode*>& nodeList, TArray<UGAction*> possibleActions, TMap<FString, int32> goal);
+	bool BuildGraph(GNode* Parent, TArray<GNode*>& NodeList, TArray<UGAction*> PossibleActions, TMap<FName, int32> Goal);
 
-	TArray<UGAction*> ActionSubset(TArray<UGAction*>& actions, UGAction* actionToRemove);
+	TArray<UGAction*> ActionSubset(TArray<UGAction*>& Actions, UGAction* ActionToRemove);
 
-	TArray<GNode*> nodes;
+	TArray<GNode*> Nodes;
 
 
-	bool GoalAchieved(TMap<FString, int32> goal, TMap<FString, int32> state);
+	bool GoalAchieved(TMap<FName, int32> Goal, TMap<FName, int32> State);
 
 public:
-	AWorldStateManager* stateManager;
+	AWorldStateManager* StateManager;
 
 };

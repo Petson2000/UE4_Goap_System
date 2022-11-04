@@ -13,19 +13,19 @@ class GOAP_SYSTEM_API GNode
 public:
 	GNode() = default;
 
-	GNode(GNode* inParent, float inCost, TMap<FString, int32> states, UGAction* inAction);
+	GNode(GNode* InParent, float InCost, TMap<FName, int32> States, UGAction* InAction);
 
-	GNode(GNode* inParent, float inCost, const TMap<FString, int32>& allStates, const TMap<FString, int32>& beliefStates, UGAction* inAction);
+	GNode(GNode* inParent, float inCost, const TMap<FName, int32>& allStates, const TMap<FName, int32>& beliefStates, UGAction* inAction);
 
 	~GNode();
 
 public: 
 
-	 GNode* parent = nullptr;
-	 float cost = 0.0f;
+	 GNode* Parent = nullptr;
+	 float Cost = 0.0f;
 
-	TMap<FString, int32> states;
+	TMap<FName, int32> States;
 
-	UGAction* action = nullptr
+	UGAction* Action = nullptr
 		;
 };

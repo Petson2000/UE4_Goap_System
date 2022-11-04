@@ -6,19 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "GInventory.generated.h"
 
-UCLASS()
-class GOAP_SYSTEM_API AGInventory : public AActor
+UCLASS(Blueprintable, BlueprintType)
+class GOAP_SYSTEM_API UGInventory : public UObject
 {
 	GENERATED_BODY()
 	
 public:	
-	AGInventory();
-
-protected:
-	virtual void BeginPlay() override;
+	UGInventory();
 
 public:	
-	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
 	void InsertItemInInventory(AActor* Item);
@@ -28,5 +24,5 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	TMap<AActor*, bool> items;
+	TMap<AActor*, bool> Items;
 };

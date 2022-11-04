@@ -9,58 +9,44 @@ AWorldStateManager::AWorldStateManager()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
-void AWorldStateManager::BeginPlay()
+FORCEINLINE bool AWorldStateManager::HasState(FName key, int32 value)
 {
-	Super::BeginPlay();
-	
+	return States.Contains(key);
 }
 
-// Called every frame
-void AWorldStateManager::Tick(float DeltaTime)
+FORCEINLINE void AWorldStateManager::AddState(FName key, int32 value)
 {
-	Super::Tick(DeltaTime);
-
+	States.Add(key, value);
 }
 
-FORCEINLINE bool AWorldStateManager::HasState(FString key, int32 value)
+void AWorldStateManager::RemoveState(FName key)
 {
-	return states.Contains(key);
-}
-
-FORCEINLINE void AWorldStateManager::AddState(FString key, int32 value)
-{
-	states.Add(key, value);
-}
-
-void AWorldStateManager::RemoveState(FString key)
-{
-	if (states.Contains(key))
+	if (States.Contains(key))
 	{
-		states.Remove(key);
+		States.Remove(key);
 	}
 }
 
-void AWorldStateManager::SetState(FString key, int32 value)
+void AWorldStateManager::SetState(FName key, int32 value)
 {
-	if (states.Contains(key))
+	if (States.Contains(key))
 	{
-		states[key] = value;
+		States[key] = value;
 	}
 
 	else
 	{
-		states.Add(key, value);
+		States.Add(key, value);
 	}
 }
 
-void AWorldStateManager::ModifyState(FString key, int32 value)
+void AWorldStateManager::ModifyState(FName key, int32 value)
 {
-	if (states.Contains(key))
+	if (States.Contains(key))
 	{
-		states[key] += value;
+		States[key] += value;
 
-		if (states[key] <= 0)
+		if (States[key] <= 0)
 		{
 			RemoveState(key);
 		}
@@ -68,12 +54,12 @@ void AWorldStateManager::ModifyState(FString key, int32 value)
 
 	else
 	{
-		states.Add(key, value);
+		States.Add(key, value);
 	}
 }
 
-TMap<FString, int32> AWorldStateManager::GetStates()
+TMap<FName, int32> AWorldStateManager::GetStates()
 {
-	return states;
+	return States;
 }
 

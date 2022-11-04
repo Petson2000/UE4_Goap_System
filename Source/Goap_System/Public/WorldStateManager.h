@@ -15,34 +15,26 @@ public:
 	// Sets default values for this actor's properties
 	AWorldStateManager();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable, Category = "GOAP")
+	bool HasState(FName Key, int32 Value);
 
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	bool HasState(FString key, int32 value);
+	void AddState(FName Key, int32 Value);
 
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	void AddState(FString key, int32 value);
+	void RemoveState(FName Key);
 
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	void RemoveState(FString key);
+	void SetState(FName Key, int32 Value);
 
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	void SetState(FString key, int32 value);
+	void ModifyState(FName Key, int32 Value);
 
 	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	void ModifyState(FString key, int32 value);
-
-	UFUNCTION(BlueprintCallable, Category = "GOAP")
-	TMap<FString, int32> GetStates();
+	TMap<FName, int32> GetStates();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GOAP")
-	TMap<FString, int32> states;
+	TMap<FName, int32> States;
 
 };

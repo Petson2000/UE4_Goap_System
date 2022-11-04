@@ -7,10 +7,10 @@ WorldState::WorldState()
 {
 }
 
-WorldState::WorldState(FString inKey, int32 inValue)
+WorldState::WorldState(FString InKey, int32 InValue)
 {
-	key = inKey;
-	value = inValue;
+	Key = InKey;
+	Value = InValue;
 }
 
 WorldState::~WorldState()

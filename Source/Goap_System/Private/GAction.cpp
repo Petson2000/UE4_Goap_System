@@ -1,40 +1,19 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GAction.h"
 
-// Sets default values for this component's properties
 UGAction::UGAction()
 {
-	PrimaryComponentTick.bCanEverTick = false;
 }
 
-
-// Called when the game starts
-void UGAction::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-
-// Called every frame
-void UGAction::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
-bool UGAction::isAchievable()
+bool UGAction::IsAchievable()
 {
 	return true;
 }
 
-bool UGAction::isAchievableGiven(const TMap<FString, int32>& conditions)
+bool UGAction::IsAchievableGiven(const TMap<FName, int32>& Conditions)
 {
-	for (const auto& pair : preConditions)
+	for (const auto& Pair : PreCondition)
 	{
-		if (!conditions.Contains(pair.Key))
+		if (!Conditions.Contains(Pair.Key))
 		{
 			return false;
 		}
@@ -42,3 +21,24 @@ bool UGAction::isAchievableGiven(const TMap<FString, int32>& conditions)
 	return true;
 }
 
+void UGAction::FinishAction(AActor* PerformingActor)
+{
+	PostPerform(PerformingActor);
+	bIsRunning = false;
+}
+
+
+bool UGAction::PrePerform_Implementation(AActor* PerformingActor)
+{
+	return true;
+}
+
+void UGAction::PerformUpdate_Implementation(AActor* PerformingActor)
+{
+
+}
+
+bool UGAction::PostPerform_Implementation(AActor* PerformingActor)
+{
+	return true;
+}

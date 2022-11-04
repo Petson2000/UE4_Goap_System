@@ -1,31 +1,31 @@
 #include "GNode.h"
 
 
-GNode::GNode(GNode* inParent, float inCost, TMap<FString, int32> inStates, UGAction* inAction)
+GNode::GNode(GNode* InParent, float InCost, TMap<FName, int32> InStates, UGAction* InAction)
 {
-	parent = inParent;
-	cost = inCost;
-	states = inStates;
-	action = inAction;
+	Parent = InParent;
+	Cost = InCost;
+	States = InStates;
+	Action = InAction;
 }
 
-GNode::GNode(GNode* inParent, float inCost, const TMap<FString, int32>& allStates, const TMap<FString, int32>& beliefStates, UGAction* inAction)
+GNode::GNode(GNode* InParent, float InCost, const TMap<FName, int32>& AllStates, const TMap<FName, int32>& BeliefStates, UGAction* InAction)
 {
-	parent = inParent;
+	Parent = InParent;
 
-	cost = inCost;
+	Cost = InCost;
 
-	states = TMap<FString, int32>(allStates);
+	States = TMap<FName, int32>(AllStates);
 
-	for (TPair<FString, int32> pair : beliefStates)
+	for (TPair<FName, int32> Pair : BeliefStates)
 	{
-		if (!states.Contains(pair.Key))
+		if (!States.Contains(Pair.Key))
 		{
-			states.Add(pair);
+			States.Add(Pair);
 		}
 	}
 
-	action = inAction;
+	Action = InAction;
 }
 
 GNode::~GNode()
